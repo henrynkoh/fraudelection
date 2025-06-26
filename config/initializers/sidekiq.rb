@@ -40,6 +40,7 @@ Sidekiq::Web.configure do |config|
   config.set_session_options(key: "_interslice_session")
 end
 
-# Add Sidekiq-Cron tab to Web UI
-Sidekiq::Web.tabs["Cron"] = "cron"
-Sidekiq::Web.tabs["History"] = "history" 
+# Register Sidekiq-Cron tab in Web UI
+Sidekiq::Web.configure do |config|
+  config.register(:cron, name: "Cron", icon: "clock")
+end 
