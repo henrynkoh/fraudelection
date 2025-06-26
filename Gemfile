@@ -65,7 +65,7 @@ group :test do
 end
 
 gem "sidekiq", "~> 8.0"
-gem "sidekiq-cron", "~> 1.12"
+gem "sidekiq-cron", "~> 2.3"
 gem "redis", "~> 5.4"
 gem "nokogiri", "~> 1.18"
 gem "httparty", "~> 0.23.1"
