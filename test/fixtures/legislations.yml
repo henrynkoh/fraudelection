@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  purpose: MyText
+  summary: MyText
+  ideology_score: 1
+  sponsors: MyString
+  status: MyString
+  proposed_date: 2025-06-26
+  approved_date: 2025-06-26
+  enacted_date: 2025-06-26
+
+two:
+  name: MyString
+  purpose: MyText
+  summary: MyText
+  ideology_score: 1
+  sponsors: MyString
+  status: MyString
+  proposed_date: 2025-06-26
+  approved_date: 2025-06-26
+  enacted_date: 2025-06-26

@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  news_article: one
+  legislation: one
+  script: MyString
+  video_path: MyString
+  thumbnail_path: MyString
+  youtube_id: MyString
+  status: MyString
+
+two:
+  news_article: two
+  legislation: two
+  script: MyString
+  video_path: MyString
+  thumbnail_path: MyString
+  youtube_id: MyString
+  status: MyString
