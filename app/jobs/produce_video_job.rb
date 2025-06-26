@@ -1,6 +1,5 @@
-class ProduceVideoJob
-  include Sidekiq::Worker
-  sidekiq_options queue: :default, retry: 3
+class ProduceVideoJob < ApplicationJob
+  queue_as :default
 
   def perform(video_id = nil)
     return unless video_id
@@ -29,7 +28,7 @@ class ProduceVideoJob
   def update_progress(percentage, message)
     Sidekiq.redis do |conn|
       conn.hset(
-        "job_progress:#{self.class.name}:#{jid}",
+        "job_progress:#{self.class.name}:#{job_id}",
         {
           percentage: percentage,
           message: message,
@@ -37,7 +36,7 @@ class ProduceVideoJob
         }
       )
       # Set expiry to 1 hour
-      conn.expire("job_progress:#{self.class.name}:#{jid}", 3600)
+      conn.expire("job_progress:#{self.class.name}:#{job_id}", 3600)
     end
   end
 end 

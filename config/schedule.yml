@@ -30,4 +30,34 @@ upload_video_job:
   cron: "30 11,23 * * *"  # At 11:30 and 23:30 every day
   class: "UploadVideoJob"
   queue: "default"
-  args: [] 
+  args: []
+
+crawl_news:
+  cron: "0 */4 * * *"  # Every 4 hours
+  class: "CrawlNewsJob"
+  queue: default
+  description: "Crawl news sources for election fraud related content"
+
+crawl_legislation:
+  cron: "0 0 * * *"  # Daily at midnight
+  class: "CrawlLegislationJob"
+  queue: default
+  description: "Analyze new election-related legislation"
+
+generate_script:
+  cron: "30 */4 * * *"  # Every 4 hours, 30 minutes after news crawl
+  class: "GenerateScriptJob"
+  queue: default
+  description: "Generate script for new content"
+
+produce_video:
+  cron: "0 */6 * * *"  # Every 6 hours
+  class: "ProduceVideoJob"
+  queue: default
+  description: "Produce video from generated script"
+
+upload_video:
+  cron: "30 */6 * * *"  # Every 6 hours, 30 minutes after video production
+  class: "UploadVideoJob"
+  queue: default
+  description: "Upload produced video to YouTube" 

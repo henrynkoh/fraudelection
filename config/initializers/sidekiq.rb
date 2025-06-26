@@ -40,7 +40,6 @@ Sidekiq::Web.configure do |config|
   config.set_session_options(key: "_interslice_session")
 end
 
-# Register cron web UI
-Sidekiq::Web.configure do |config|
-  config.add_extension(Sidekiq::Cron::Web, name: "Cron", tab: "Cron", index: 2)
-end 
+# Add Sidekiq-Cron tab to Web UI
+Sidekiq::Web.tabs["Cron"] = "cron"
+Sidekiq::Web.tabs["History"] = "history" 

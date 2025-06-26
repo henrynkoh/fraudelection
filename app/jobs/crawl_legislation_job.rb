@@ -1,6 +1,5 @@
-class CrawlLegislationJob
-  include Sidekiq::Worker
-  sidekiq_options queue: :default, retry: 3
+class CrawlLegislationJob < ApplicationJob
+  queue_as :default
 
   def perform
     update_progress(0, "Starting legislation analysis")
@@ -34,7 +33,7 @@ class CrawlLegislationJob
   def update_progress(percentage, message)
     Sidekiq.redis do |conn|
       conn.hset(
-        "job_progress:#{self.class.name}:#{jid}",
+        "job_progress:#{self.class.name}:#{job_id}",
         {
           percentage: percentage,
           message: message,
@@ -42,7 +41,7 @@ class CrawlLegislationJob
         }
       )
       # Set expiry to 1 hour
-      conn.expire("job_progress:#{self.class.name}:#{jid}", 3600)
+      conn.expire("job_progress:#{self.class.name}:#{job_id}", 3600)
     end
   end
 end 
