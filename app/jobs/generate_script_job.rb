@@ -3,7 +3,7 @@ class GenerateScriptJob < ApplicationJob
 
   def perform(news_id = nil, legislation_id = nil)
     update_progress(0, "Starting script generation")
-    
+
     begin
       if news_id
         news = NewsArticle.find_by(id: news_id)
@@ -56,4 +56,4 @@ class GenerateScriptJob < ApplicationJob
       conn.expire("job_progress:#{self.class.name}:#{job_id}", 3600)
     end
   end
-end 
+end

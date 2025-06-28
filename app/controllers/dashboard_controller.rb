@@ -9,28 +9,28 @@ class DashboardController < ApplicationController
 
   def approve_video
     video = Video.find(params[:id])
-    video.update!(status: 'approved')
+    video.update!(status: "approved")
     ProduceVideoJob.perform_later(video.id)
-    redirect_to root_path, notice: '영상 제작이 시작되었습니다.'
+    redirect_to root_path, notice: "영상 제작이 시작되었습니다."
   end
 
   def generate_script
     record_type = params[:record_type]
     record_id = params[:record_id]
     GenerateScriptJob.perform_later(record_type, record_id)
-    redirect_to root_path, notice: '스크립트 생성이 시작되었습니다.'
+    redirect_to root_path, notice: "스크립트 생성이 시작되었습니다."
   end
 
   def upload_video
     video = Video.find(params[:id])
     UploadVideoJob.perform_later(video.id)
-    redirect_to root_path, notice: '유튜브 업로드가 시작되었습니다.'
+    redirect_to root_path, notice: "유튜브 업로드가 시작되었습니다."
   end
 
   def crawl_data
     CrawlNewsJob.perform_later
     CrawlLegislationJob.perform_later
-    redirect_to root_path, notice: '데이터 수집이 시작되었습니다.'
+    redirect_to root_path, notice: "데이터 수집이 시작되었습니다."
   end
 
   def job_progress
@@ -46,7 +46,7 @@ class DashboardController < ApplicationController
     workers.each do |_process_id, _thread_id, work|
       job_class = work["payload"]["class"]
       jid = work["payload"]["jid"]
-      
+
       progress = Sidekiq.redis do |conn|
         conn.hgetall("job_progress:#{job_class}:#{jid}")
       end
@@ -65,4 +65,4 @@ class DashboardController < ApplicationController
 
     jobs
   end
-end 
+end

@@ -1,10 +1,10 @@
-require 'sidekiq'
-require 'sidekiq/web'
-require 'sidekiq-cron'
-require 'sidekiq/cron/web'
+require "sidekiq"
+require "sidekiq/web"
+require "sidekiq-cron"
+require "sidekiq/cron/web"
 
 Sidekiq.configure_server do |config|
-  config.redis = { url: ENV.fetch('REDIS_URL', 'redis://localhost:6379/0') }
+  config.redis = { url: ENV.fetch("REDIS_URL", "redis://localhost:6379/0") }
 
   # Load cron jobs from config/schedule.yml
   schedule_file = "config/schedule.yml"
@@ -14,7 +14,7 @@ Sidekiq.configure_server do |config|
 end
 
 Sidekiq.configure_client do |config|
-  config.redis = { url: ENV.fetch('REDIS_URL', 'redis://localhost:6379/0') }
+  config.redis = { url: ENV.fetch("REDIS_URL", "redis://localhost:6379/0") }
 end
 
 # Configure Sidekiq-specific session middleware
@@ -43,4 +43,4 @@ end
 # Register Sidekiq-Cron tab in Web UI
 Sidekiq::Web.configure do |config|
   config.register(:cron, name: "Cron", icon: "clock")
-end 
+end

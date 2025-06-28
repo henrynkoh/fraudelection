@@ -1,4 +1,4 @@
-require 'crewai'
+require "crewai"
 
 class ScriptGenerator
   def initialize
@@ -8,8 +8,8 @@ class ScriptGenerator
   def generate_for_news(news)
     task = create_news_task(news)
     script = @crew.execute(task)
-    
-    news.videos.create!(script: script, status: 'pending')
+
+    news.videos.create!(script: script, status: "pending")
   rescue StandardError => e
     Rails.logger.error("News script generation failed: #{e.message}")
   end
@@ -17,21 +17,21 @@ class ScriptGenerator
   def generate_for_legislation(legislation)
     task = create_legislation_task(legislation)
     script = @crew.execute(task)
-    
-    legislation.videos.create!(script: script, status: 'pending')
+
+    legislation.videos.create!(script: script, status: "pending")
   rescue StandardError => e
     Rails.logger.error("Legislation script generation failed: #{e.message}")
   end
 
   def generate_pending
     NewsArticle.where.not(id: Video.select(:news_article_id))
-              .where('published_at > ?', 1.month.ago)
+              .where("published_at > ?", 1.month.ago)
               .find_each do |news|
       generate_for_news(news)
     end
 
     Legislation.where.not(id: Video.select(:legislation_id))
-               .where('proposed_date > ?', 1.month.ago)
+               .where("proposed_date > ?", 1.month.ago)
                .find_each do |legislation|
       generate_for_legislation(legislation)
     end
@@ -54,7 +54,7 @@ class ScriptGenerator
       role: "Research Analyst",
       goal: "Analyze news and legislation for key points and implications",
       backstory: "Expert in political analysis and fact-checking",
-      tools: [CrewAI::Tools::WebBrowser.new]
+      tools: [ CrewAI::Tools::WebBrowser.new ]
     )
   end
 
@@ -113,9 +113,9 @@ class ScriptGenerator
       #{raw_script}
 
       더 자세한 내용은 구독으로 확인하세요!
-      
+
       *이 내용은 참고용이며, 시청자 여러분의 개별적인 판단이 필요합니다.
       #부정선거 #팩트체크 #정치
     SCRIPT
   end
-end 
+end

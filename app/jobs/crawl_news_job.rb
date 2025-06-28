@@ -3,7 +3,7 @@ class CrawlNewsJob < ApplicationJob
 
   def perform
     update_progress(0, "Starting news crawling")
-    
+
     begin
       total_sources = NewsCrawler::SOURCES.size
       NewsCrawler::SOURCES.each_with_index do |source, index|
@@ -13,7 +13,7 @@ class CrawlNewsJob < ApplicationJob
         )
         NewsCrawler.new.crawl_source(source)
       end
-      
+
       update_progress(100, "Completed news crawling")
     rescue StandardError => e
       update_progress(-1, "Error: #{e.message}")
@@ -38,4 +38,4 @@ class CrawlNewsJob < ApplicationJob
       conn.expire("job_progress:#{self.class.name}:#{job_id}", 3600)
     end
   end
-end 
+end

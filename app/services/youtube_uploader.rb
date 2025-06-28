@@ -1,9 +1,9 @@
-require 'google/apis/youtube_v3'
+require "google/apis/youtube_v3"
 
 class YouTubeUploader
   def upload(video)
     youtube = Google::Apis::YoutubeV3::YouTubeService.new
-    youtube.client_options.application_name = 'FraudElectionFacts'
+    youtube.client_options.application_name = "FraudElectionFacts"
     youtube.authorization = authorize
 
     source = video.news_article || video.legislation
@@ -11,11 +11,11 @@ class YouTubeUploader
       title: generate_title(source),
       description: generate_description(source),
       tags: generate_tags(source),
-      category_id: '25' # News & Politics
+      category_id: "25" # News & Politics
     )
 
     video_status = Google::Apis::YoutubeV3::VideoStatus.new(
-      privacy_status: 'public',
+      privacy_status: "public",
       self_declared_made_for_kids: false
     )
 
@@ -25,20 +25,20 @@ class YouTubeUploader
     )
 
     youtube.insert_video(
-      'snippet,status',
+      "snippet,status",
       video_object,
       upload_source: video.video_path,
-      content_type: 'video/mp4'
+      content_type: "video/mp4"
     ) do |result, err|
       if err
-        video.update!(status: 'failed')
+        video.update!(status: "failed")
         raise err
       else
-        video.update!(youtube_id: result.id, status: 'uploaded')
+        video.update!(youtube_id: result.id, status: "uploaded")
       end
     end
   rescue StandardError => e
-    video.update!(status: 'failed')
+    video.update!(status: "failed")
     Rails.logger.error("YouTube upload failed: #{e.message}")
   end
 
@@ -48,8 +48,8 @@ class YouTubeUploader
     client_secrets = Google::APIClient::ClientSecrets.load
     auth_client = client_secrets.to_authorization
     auth_client.update!(
-      scope: 'https://www.googleapis.com/auth/youtube.upload',
-      redirect_uri: 'urn:ietf:wg:oauth:2.0:oob'
+      scope: "https://www.googleapis.com/auth/youtube.upload",
+      redirect_uri: "urn:ietf:wg:oauth:2.0:oob"
     )
     auth_client.refresh!
     auth_client
@@ -66,9 +66,9 @@ class YouTubeUploader
   def generate_description(source)
     base_description = if source.is_a?(NewsArticle)
                         "#{source.summary}\n\n출처: #{source.source} (#{source.url})"
-                      else
+    else
                         "#{source.purpose}\n\n발의자: #{source.sponsors}\n상태: #{source.status}"
-                      end
+    end
 
     <<~DESCRIPTION
       #{base_description}
@@ -82,11 +82,11 @@ class YouTubeUploader
   end
 
   def generate_tags(source)
-    base_tags = ['Fraud Election', 'Election Facts', '부정선거', '팩트체크']
+    base_tags = [ "Fraud Election", "Election Facts", "부정선거", "팩트체크" ]
     if source.is_a?(NewsArticle)
-      base_tags + ['News', 'Politics', source.source]
+      base_tags + [ "News", "Politics", source.source ]
     else
-      base_tags + ['Legislation', 'Law', '입법', '국회']
+      base_tags + [ "Legislation", "Law", "입법", "국회" ]
     end
   end
-end 
+end

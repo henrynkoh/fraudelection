@@ -3,12 +3,12 @@ class ProduceVideoJob < ApplicationJob
 
   def perform(video_id = nil)
     return unless video_id
-    
+
     video = Video.find_by(id: video_id)
     return unless video
-    
+
     update_progress(0, "Starting video production")
-    
+
     begin
       update_progress(20, "Preparing assets")
       update_progress(40, "Generating video frames")
@@ -39,4 +39,4 @@ class ProduceVideoJob < ApplicationJob
       conn.expire("job_progress:#{self.class.name}:#{job_id}", 3600)
     end
   end
-end 
+end

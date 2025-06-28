@@ -3,23 +3,23 @@ class CrawlLegislationJob < ApplicationJob
 
   def perform
     update_progress(0, "Starting legislation analysis")
-    
+
     begin
       total_steps = 4
       current_step = 0
-      
+
       update_progress(25, "Fetching recent legislation")
       LegislationAnalyzer.new.fetch_recent
       current_step += 1
-      
+
       update_progress(50, "Analyzing content")
       LegislationAnalyzer.new.analyze_content
       current_step += 1
-      
+
       update_progress(75, "Scoring ideology")
       LegislationAnalyzer.new.score_ideology
       current_step += 1
-      
+
       update_progress(100, "Completed legislation analysis")
     rescue StandardError => e
       update_progress(-1, "Error: #{e.message}")
@@ -44,4 +44,4 @@ class CrawlLegislationJob < ApplicationJob
       conn.expire("job_progress:#{self.class.name}:#{job_id}", 3600)
     end
   end
-end 
+end
